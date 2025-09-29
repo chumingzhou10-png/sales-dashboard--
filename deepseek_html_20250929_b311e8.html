@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>广州市普惠数码技术有限公司 - 销售业绩排行榜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .company-header {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .company-header h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+        
+        .company-header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1em;
+        }
+        
+        .controls {
+            background: #f8f9fa;
+            padding: 25px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .period-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .period-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .period-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .period-btn.active {
+            background: #2c3e50;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .current-period {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0 15px;
+        }
+        
+        .target-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+        
+        .target-input-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        
+        .target-input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+            font-size: 0.9em;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: end;
+            flex-grow: 1;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        input, select {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .quick-add-section {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .quick-add-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .quick-add-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .new-salesperson-section {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .new-salesperson-section h3 {
+            color: #e67e22;
+            margin-bottom: 15px;
+        }
+        
+        .new-salesperson-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .chart-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        .sales-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            min-width: 800px;
+        }
+        
+        .sales-table th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1.1em;
+            position: relative;
+        }
+        
+        .sales-table th:hover {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+        
+        .sales-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 1.1em;
+        }
+        
+        .sales-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .sales-table tr:hover {
+            background: #e3f2fd;
+            transition: all 0.2s;
+        }
+        
+        .sales-number {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .rank {
+            font-weight: bold;
+            text-align: center;
+            width: 60px;
+        }
+        
+        .rank-1 { 
+            color: #e74c3c; 
+            background-color: #fff0f0;
+        }
+        .rank-2 { 
+            color: #e67e22; 
+            background-color: #fff8f0;
+        }
+        .rank-3 { 
+            color: #f1c40f; 
+            background-color: #fffdf0;
+        }
+        
+        .sort-indicator {
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+        
+        .summary-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .total-card {
+            flex: 1;
+            min-width: 300px;
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .total-card h3 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        
+        .target-card {
+            flex: 1;
+            min-width: 300px;
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .target-card h3 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .trend-indicator {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        
+        .trend-up {
+            color: #e74c3c;
+        }
+        
+        .trend-down {
+            color: #27ae60;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2c3e50);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .target-management {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .target-management h3 {
+            color: #e67e22;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .target-inputs {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .target-input-group-large {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+        
+        .target-input-group-large label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+            text-align: center;
+        }
+        
+        .period-comparison {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .period-card {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .period-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 10px;
+        }
+        
+        .top-performer {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .top-performer .rank {
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .period-controls {
+                justify-content: center;
+            }
+            
+            .target-controls {
+                margin-left: 0;
+                justify-content: center;
+            }
+            
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .sales-table th, .sales-table td {
+                padding: 15px 10px;
+            }
+            
+            .target-inputs {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="company-header">
+            <h1>广州市普惠数码技术有限公司</h1>
+            <p>销售业绩管理系统</p>
+        </div>
+        
+        <div class="header">
+            <h2>📊 销售业绩排行榜</h2>
+            <p>多维度业绩分析，精细化目标追踪</p>
+        </div>
+        
+        <div class="controls">
+            <div class="period-controls">
+                <button class="period-btn active" onclick="setPeriod('month')">月度</button>
+                <button class="period-btn" onclick="setPeriod('quarter')">季度</button>
+                <button class="period-btn" onclick="setPeriod('year')">年度</button>
+                <div class="current-period" id="currentPeriod">2025年10月</div>
+                <button class="period-btn" onclick="changePeriod(-1)">← 上一期</button>
+                <button class="period-btn" onclick="changePeriod(1)">下一期 →</button>
+            </div>
+            
+            <div class="target-controls">
+                <div class="target-input-group">
+                    <label for="targetAmount">本期目标 (RMB)</label>
+                    <input type="number" id="targetAmount" placeholder="输入本期目标">
+                </div>
+                <button onclick="updateTarget()">更新目标</button>
+            </div>
+            
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="salesperson">业务员姓名</label>
+                    <select id="salesperson">
+                        <!-- 选项将通过JavaScript动态生成 -->
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="salesAmount">销售额 (RMB)</label>
+                    <input type="number" id="salesAmount" placeholder="输入销售额">
+                </div>
+                <div class="input-group">
+                    <label for="monthSelect">月份</label>
+                    <select id="monthSelect">
+                        <!-- 月份选项将通过JavaScript动态生成 -->
+                    </select>
+                </div>
+                <button onclick="addSalesData()">添加/更新数据</button>
+            </div>
+        </div>
+        
+        <div class="target-management">
+            <h3>🎯 业绩目标管理</h3>
+            <div class="target-inputs">
+                <div class="target-input-group-large">
+                    <label for="yearlyTarget">年度目标 (RMB)</label>
+                    <input type="number" id="yearlyTarget" placeholder="输入年度目标" value="2000000">
+                </div>
+                <div class="target-input-group-large">
+                    <label for="q1Target">第一季度目标 (RMB)</label>
+                    <input type="number" id="q1Target" placeholder="输入第一季度目标" value="500000">
+                </div>
+                <div class="target-input-group-large">
+                    <label for="q2Target">第二季度目标 (RMB)</label>
+                    <input type="number" id="q2Target" placeholder="输入第二季度目标" value="500000">
+                </div>
+                <div class="target-input-group-large">
+                    <label for="q3Target">第三季度目标 (RMB)</label>
+                    <input type="number" id="q3Target" placeholder="输入第三季度目标" value="500000">
+                </div>
+                <div class="target-input-group-large">
+                    <label for="q4Target">第四季度目标 (RMB)</label>
+                    <input type="number" id="q4Target" placeholder="输入第四季度目标" value="500000">
+                </div>
+                <button onclick="updateAllTargets()" style="align-self: end;">更新所有目标</button>
+            </div>
+        </div>
+        
+        <div class="quick-add-section">
+            <h3>📝 快速添加销售数据</h3>
+            <div class="quick-add-controls">
+                <div class="input-group">
+                    <label for="quickSalesperson">业务员</label>
+                    <select id="quickSalesperson">
+                        <!-- 选项将通过JavaScript动态生成 -->
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="quickSalesAmount">销售额 (RMB)</label>
+                    <input type="number" id="quickSalesAmount" placeholder="输入销售额">
+                </div>
+                <button onclick="quickAddSalesData()">快速添加</button>
+            </div>
+        </div>
+        
+        <div class="new-salesperson-section">
+            <h3>👤 添加新业务员</h3>
+            <div class="new-salesperson-controls">
+                <div class="input-group">
+                    <label for="newSalespersonName">新业务员姓名</label>
+                    <input type="text" id="newSalespersonName" placeholder="输入新业务员姓名">
+                </div>
+                <div class="input-group">
+                    <label for="newSalespersonSales">初始销售额 (RMB)</label>
+                    <input type="number" id="newSalespersonSales" placeholder="输入初始销售额">
+                </div>
+                <button onclick="addNewSalesperson()">添加新业务员</button>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <table class="sales-table" id="salesTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">排名 <span class="sort-indicator">▼</span></th>
+                        <th onclick="sortTable(1)">业务员 <span class="sort-indicator">▼</span></th>
+                        <th onclick="sortTable(2)">销售额 (RMB) <span class="sort-indicator">▼</span></th>
+                        <th>完成度</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- 数据将通过JavaScript动态生成 -->
+                </tbody>
+            </table>
+            
+            <div class="summary-section">
+                <div class="total-card">
+                    <h3>💰 总销售额: <span id="totalSales">0</span> RMB</h3>
+                    <p>业务员总数: <span id="salespersonCount">0</span> 人 | 平均销售额: <span id="averageSales">0</span> RMB</p>
+                </div>
+                
+                <div class="target-card">
+                    <h3>🎯 目标完成情况</h3>
+                    <p>本期目标: <span id="targetValue">0</span> RMB | 差距: <span id="targetGap">0</span> RMB</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <p>完成度: <span id="completionRate">0%</span></p>
+                    <p>年度目标: <span id="yearlyTargetValue">2,000,000</span> RMB | 年度完成度: <span id="yearlyCompletionRate">0%</span></p>
+                </div>
+            </div>
+            
+            <div class="period-comparison">
+                <div class="period-card">
+                    <h3>📈 本期最佳表现</h3>
+                    <div id="topPerformers">
+                        <!-- 本期最佳表现者将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="period-card">
+                    <h3>📊 业绩对比</h3>
+                    <div id="periodComparison">
+                        <!-- 业绩对比数据将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取当前日期
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth() + 1; // 月份从0开始，所以加1
+        
+        // 格式化月份为YYYY-MM
+        function formatMonth(year, month) {
+            return `${year}-${month.toString().padStart(2, '0')}`;
+        }
+        
+        // 获取月份名称
+        function getMonthName(monthKey) {
+            const [year, month] = monthKey.split('-');
+            const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+            return `${year}年${monthNames[parseInt(month) - 1]}`;
+        }
+        
+        // 获取季度名称
+        function getQuarterName(year, quarter) {
+            const quarterNames = ['第一季度', '第二季度', '第三季度', '第四季度'];
+            return `${year}年${quarterNames[quarter - 1]}`;
+        }
+        
+        // 获取月份所属的季度
+        function getQuarterByMonth(month) {
+            return Math.ceil(month / 3);
+        }
+        
+        // 生成最近12个月的月份列表
+        function generateRecentMonths() {
+            const months = [];
+            let year = currentYear;
+            let month = currentMonth;
+            
+            for (let i = 0; i < 12; i++) {
+                months.unshift(formatMonth(year, month));
+                
+                month--;
+                if (month === 0) {
+                    month = 12;
+                    year--;
+                }
+            }
+            
+            return months;
+        }
+        
+        // 初始数据 - 6月和7月数据为0，8月为总额（已修正）
+        const initialSalesData = {
+            "2025-06": [
+                { name: "Abby", sales: 0 },
+                { name: "Teresa", sales: 0 },
+                { name: "Vicky", sales: 0 },
+                { name: "Lynn", sales: 0 },
+                { name: "Eaven", sales: 0 },
+                { name: "Winnie", sales: 0 }
+            ],
+            "2025-07": [
+                { name: "Abby", sales: 0 },
+                { name: "Teresa", sales: 0 },
+                { name: "Vicky", sales: 0 },
+                { name: "Lynn", sales: 0 },
+                { name: "Eaven", sales: 0 },
+                { name: "Winnie", sales: 0 }
+            ],
+            "2025-08": [
+                { name: "Abby", sales: 149516.36 },
+                { name: "Teresa", sales: 27558.21 },
+                { name: "Vicky", sales: 9322.32 },
+                { name: "Lynn", sales: 30810.30 },
+                { name: "Eaven", sales: 27285.71 },
+                { name: "Winnie", sales: 1278.50 }
+            ]
+        };
+        
+        // 所有业务员列表
+        let allSalespersons = ["Abby", "Teresa", "Vicky", "Lynn", "Eaven", "Winnie"];
+        
+        // 销售数据存储
+        let salesData = {};
+        
+        // 目标数据存储
+        let targetData = {
+            yearly: 2000000,
+            q1: 500000,
+            q2: 500000,
+            q3: 500000,
+            q4: 500000
+        };
+        
+        // 当前查看的期间
+        let currentPeriodType = 'month'; // 'month', 'quarter', 'year'
+        let currentPeriodValue = formatMonth(currentYear, currentMonth); // 月份格式或季度格式或年份
+        let sortDirection = {};
+        
+        // 初始化数据
+        function initializeData() {
+            // 获取最近12个月的月份
+            const recentMonths = generateRecentMonths();
+            
+            // 初始化销售数据
+            salesData = {};
+            recentMonths.forEach(month => {
+                // 如果月份在初始数据中，使用初始数据
+                if (initialSalesData[month]) {
+                    salesData[month] = JSON.parse(JSON.stringify(initialSalesData[month]));
+                } else {
+                    // 否则创建空数据
+                    salesData[month] = allSalespersons.map(name => ({ name, sales: 0 }));
+                }
+            });
+            
+            // 更新月份选择下拉框
+            updateMonthSelect();
+            
+            // 初始化目标输入框
+            updateTargetInputs();
+            
+            // 初始化表格
+            updateSalespersonDropdowns();
+            updateTable();
+            updateTotal();
+            updateTopPerformers();
+            updatePeriodComparison();
+            updateTargetDisplay();
+            
+            // 更新当前期间显示
+            updateCurrentPeriodDisplay();
+        }
+        
+        // 更新月份选择下拉框
+        function updateMonthSelect() {
+            const monthSelect = document.getElementById('monthSelect');
+            monthSelect.innerHTML = '';
+            
+            const months = Object.keys(salesData).sort();
+            
+            months.forEach(month => {
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = getMonthName(month);
+                monthSelect.appendChild(option);
+            });
+            
+            // 设置默认选中当前月份
+            monthSelect.value = formatMonth(currentYear, currentMonth);
+        }
+        
+        // 更新目标输入框
+        function updateTargetInputs() {
+            document.getElementById('yearlyTarget').value = targetData.yearly;
+            document.getElementById('q1Target').value = targetData.q1;
+            document.getElementById('q2Target').value = targetData.q2;
+            document.getElementById('q3Target').value = targetData.q3;
+            document.getElementById('q4Target').value = targetData.q4;
+            
+            // 设置本期目标输入框的初始值
+            updateCurrentPeriodTargetInput();
+        }
+        
+        // 更新当前期间目标输入框
+        function updateCurrentPeriodTargetInput() {
+            const targetAmountInput = document.getElementById('targetAmount');
+            
+            if (currentPeriodType === 'month') {
+                // 月度目标 = 季度目标 / 3
+                const quarter = getQuarterByMonth(parseInt(currentPeriodValue.split('-')[1]));
+                const quarterTarget = targetData[`q${quarter}`];
+                targetAmountInput.value = Math.round(quarterTarget / 3);
+            } else if (currentPeriodType === 'quarter') {
+                const quarter = parseInt(currentPeriodValue.split('-')[1].substring(1));
+                targetAmountInput.value = targetData[`q${quarter}`];
+            } else if (currentPeriodType === 'year') {
+                targetAmountInput.value = targetData.yearly;
+            }
+        }
+        
+        // 更新业务员下拉菜单
+        function updateSalespersonDropdowns() {
+            const salespersonSelect = document.getElementById('salesperson');
+            const quickSalespersonSelect = document.getElementById('quickSalesperson');
+            
+            // 清空现有选项
+            salespersonSelect.innerHTML = '';
+            quickSalespersonSelect.innerHTML = '';
+            
+            // 添加所有业务员选项
+            allSalespersons.forEach(salesperson => {
+                const option = document.createElement('option');
+                option.value = salesperson;
+                option.textContent = salesperson;
+                salespersonSelect.appendChild(option);
+                
+                const quickOption = document.createElement('option');
+                quickOption.value = salesperson;
+                quickOption.textContent = salesperson;
+                quickSalespersonSelect.appendChild(quickOption);
+            });
+        }
+        
+        // 设置期间类型（月度/季度/年度）
+        function setPeriod(type) {
+            currentPeriodType = type;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 根据当前日期设置默认期间
+            if (type === 'month') {
+                currentPeriodValue = formatMonth(currentYear, currentMonth);
+            } else if (type === 'quarter') {
+                currentPeriodValue = `${currentYear}-Q${getQuarterByMonth(currentMonth)}`;
+            } else if (type === 'year') {
+                currentPeriodValue = `${currentYear}`;
+            }
+            
+            updateCurrentPeriodDisplay();
+            updateCurrentPeriodTargetInput();
+            updateTable();
+            updateTotal();
+            updateTopPerformers();
+            updatePeriodComparison();
+            updateTargetDisplay();
+        }
+        
+        // 切换期间（上一期/下一期）
+        function changePeriod(direction) {
+            if (currentPeriodType === 'month') {
+                // 月份切换
+                const [year, month] = currentPeriodValue.split('-').map(Number);
+                let newMonth = month + direction;
+                let newYear = year;
+                
+                if (newMonth > 12) {
+                    newMonth = 1;
+                    newYear++;
+                } else if (newMonth < 1) {
+                    newMonth = 12;
+                    newYear--;
+                }
+                
+                currentPeriodValue = formatMonth(newYear, newMonth);
+            } else if (currentPeriodType === 'quarter') {
+                // 季度切换
+                const [year, quarter] = currentPeriodValue.split('-');
+                const quarterNum = parseInt(quarter.substring(1));
+                let newQuarter = quarterNum + direction;
+                let newYear = parseInt(year);
+                
+                if (newQuarter > 4) {
+                    newQuarter = 1;
+                    newYear++;
+                } else if (newQuarter < 1) {
+                    newQuarter = 4;
+                    newYear--;
+                }
+                
+                currentPeriodValue = `${newYear}-Q${newQuarter}`;
+            } else if (currentPeriodType === 'year') {
+                // 年度切换
+                const year = parseInt(currentPeriodValue);
+                currentPeriodValue = (year + direction).toString();
+            }
+            
+            updateCurrentPeriodDisplay();
+            updateCurrentPeriodTargetInput();
+            updateTable();
+            updateTotal();
+            updateTopPerformers();
+            updatePeriodComparison();
+            updateTargetDisplay();
+        }
+        
+        // 更新当前期间显示
+        function updateCurrentPeriodDisplay() {
+            let displayText = '';
+            
+            if (currentPeriodType === 'month') {
+                displayText = getMonthName(currentPeriodValue);
+            } else if (currentPeriodType === 'quarter') {
+                const [year, quarter] = currentPeriodValue.split('-');
+                displayText = getQuarterName(parseInt(year), parseInt(quarter.substring(1)));
+            } else if (currentPeriodType === 'year') {
+                displayText = `${currentPeriodValue}年`;
+            }
+            
+            document.getElementById('currentPeriod').textContent = displayText;
+        }
+        
+        // 获取当前期间的数据
+        function getCurrentPeriodData() {
+            if (currentPeriodType === 'month') {
+                // 返回单月数据
+                return salesData[currentPeriodValue] || [];
+            } else if (currentPeriodType === 'quarter') {
+                // 返回季度数据（三个月总和）
+                const [year, quarter] = currentPeriodValue.split('-');
+                const quarterNum = parseInt(quarter.substring(1));
+                const startMonth = (quarterNum - 1) * 3 + 1;
+                
+                // 获取季度内所有月份
+                const quarterMonths = [
+                    formatMonth(parseInt(year), startMonth),
+                    formatMonth(parseInt(year), startMonth + 1),
+                    formatMonth(parseInt(year), startMonth + 2)
+                ];
+                
+                // 合并季度数据
+                const quarterData = {};
+                
+                allSalespersons.forEach(salesperson => {
+                    quarterData[salesperson] = 0;
+                });
+                
+                quarterMonths.forEach(month => {
+                    if (salesData[month]) {
+                        salesData[month].forEach(person => {
+                            quarterData[person.name] += person.sales;
+                        });
+                    }
+                });
+                
+                // 转换为数组格式
+                return Object.keys(quarterData).map(name => ({
+                    name,
+                    sales: quarterData[name]
+                }));
+            } else if (currentPeriodType === 'year') {
+                // 返回年度数据（全年总和）
+                const year = parseInt(currentPeriodValue);
+                
+                // 获取年度内所有月份
+                const yearMonths = [];
+                for (let month = 1; month <= 12; month++) {
+                    yearMonths.push(formatMonth(year, month));
+                }
+                
+                // 合并年度数据
+                const yearData = {};
+                
+                allSalespersons.forEach(salesperson => {
+                    yearData[salesperson] = 0;
+                });
+                
+                yearMonths.forEach(month => {
+                    if (salesData[month]) {
+                        salesData[month].forEach(person => {
+                            yearData[person.name] += person.sales;
+                        });
+                    }
+                });
+                
+                // 转换为数组格式
+                return Object.keys(yearData).map(name => ({
+                    name,
+                    sales: yearData[name]
+                }));
+            }
+            
+            return [];
+        }
+        
+        // 获取当前期间的目标
+        function getCurrentPeriodTarget() {
+            if (currentPeriodType === 'month') {
+                // 月度目标 = 季度目标 / 3
+                const quarter = getQuarterByMonth(parseInt(currentPeriodValue.split('-')[1]));
+                return targetData[`q${quarter}`] / 3;
+            } else if (currentPeriodType === 'quarter') {
+                const quarter = parseInt(currentPeriodValue.split('-')[1].substring(1));
+                return targetData[`q${quarter}`];
+            } else if (currentPeriodType === 'year') {
+                return targetData.yearly;
+            }
+            
+            return 0;
+        }
+        
+        // 更新表格
+        function updateTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            const currentData = getCurrentPeriodData();
+            const currentTarget = getCurrentPeriodTarget();
+            
+            // 按销售额排序
+            currentData.sort((a, b) => b.sales - a.sales);
+            
+            currentData.forEach((person, index) => {
+                const row = document.createElement('tr');
+                
+                // 排名列
+                const rankCell = document.createElement('td');
+                rankCell.className = `rank rank-${index + 1}`;
+                rankCell.textContent = index + 1;
+                row.appendChild(rankCell);
+                
+                // 姓名列
+                const nameCell = document.createElement('td');
+                nameCell.textContent = person.name;
+                row.appendChild(nameCell);
+                
+                // 销售额列
+                const salesCell = document.createElement('td');
+                salesCell.innerHTML = `<span class="sales-number">${formatNumber(person.sales)}</span> RMB`;
+                row.appendChild(salesCell);
+                
+                // 完成度列
+                const completionCell = document.createElement('td');
+                const completionRate = currentTarget > 0 ? (person.sales / currentTarget * 100) : 0;
+                completionCell.innerHTML = `
+                    <div class="progress-bar" style="height: 10px; margin: 5px 0;">
+                        <div class="progress-fill" style="width: ${Math.min(completionRate, 100)}%; background: ${completionRate >= 100 ? '#27ae60' : '#3498db'};"></div>
+                    </div>
+                    <div>${completionRate.toFixed(1)}%</div>
+                `;
+                row.appendChild(completionCell);
+                
+                // 操作列（仅在月度模式下显示）
+                const actionCell = document.createElement('td');
+                if (currentPeriodType === 'month') {
+                    actionCell.innerHTML = `
+                        <button onclick="editSalesData('${person.name}')" style="background: #3498db; padding: 5px 10px; font-size: 0.9em; margin-right: 5px;">编辑</button>
+                        <button onclick="deleteSalesData('${person.name}')" style="background: #e74c3c; padding: 5px 10px; font-size: 0.9em;">删除</button>
+                    `;
+                } else {
+                    actionCell.innerHTML = '-';
+                }
+                row.appendChild(actionCell);
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // 获取某人在某月的销售额
+        function getSalesForPerson(name, month) {
+            const monthData = salesData[month];
+            if (!monthData) return 0;
+            
+            const person = monthData.find(p => p.name === name);
+            return person ? person.sales : 0;
+        }
+        
+        // 添加新数据
+        function addSalesData() {
+            const salespersonSelect = document.getElementById('salesperson');
+            const amountInput = document.getElementById('salesAmount');
+            const monthSelect = document.getElementById('monthSelect');
+            
+            const name = salespersonSelect.value;
+            const amount = parseFloat(amountInput.value);
+            const month = monthSelect.value;
+            
+            if (!name) {
+                alert('请选择业务员');
+                return;
+            }
+            
+            if (isNaN(amount) || amount < 0) {
+                alert('请输入有效的销售额');
+                return;
+            }
+            
+            // 确保目标月份的数据存在
+            if (!salesData[month]) {
+                salesData[month] = [];
+            }
+            
+            // 检查是否已存在同名业务员
+            const existingIndex = salesData[month].findIndex(person => 
+                person.name === name);
+            
+            if (existingIndex !== -1) {
+                if (confirm(`业务员 "${name}" 在${getMonthName(month)}已存在，是否更新其销售额？`)) {
+                    salesData[month][existingIndex].sales = amount;
+                } else {
+                    return;
+                }
+            } else {
+                salesData[month].push({ name, sales: amount });
+            }
+            
+            // 更新表格
+            updateTable();
+            updateTotal();
+            updateTopPerformers();
+            updatePeriodComparison();
+            updateTargetDisplay();
+            
+            // 清空输入框
+            amountInput.value = '';
+        }
+        
+        // 快速添加销售数据（使用当前月份）
+        function quickAddSalesData() {
+            const salespersonSelect = document.getElementById('quickSalesperson');
+            const amountInput = document.getElementById('quickSalesAmount');
+            
+            const name = salespersonSelect.value;
+            const amount = parseFloat(amountInput.value);
+            
+            if (!name) {
+                alert('请选择业务员');
+                return;
+            }
+            
+            if (isNaN(amount) || amount < 0) {
+                alert('请输入有效的销售额');
+                return;
+            }
+            
+            // 确保当前月份的数据存在
+            const currentMonth = formatMonth(currentYear, currentMonth);
+            if (!salesData[currentMonth]) {
+                salesData[currentMonth] = [];
+            }
+            
+            // 检查是否已存在同名业务员
+            const existingIndex = salesData[currentMonth].findIndex(person => 
+                person.name === name);
+            
+            if (existingIndex !== -1) {
+                if (confirm(`业务员 "${name}" 在${getMonthName(currentMonth)}已存在，是否更新其销售额？`)) {
+                    salesData[currentMonth][existingIndex].sales = amount;
+                } else {
+                    return;
+                }
+            } else {
+                salesData[currentMonth].push({ name, sales: amount });
+            }
+            
+            updateTable();
+            updateTotal();
+            updateTopPerformers();
+            updatePeriodComparison();
+            updateTargetDisplay();
+            
+            // 清空输入框
+            amountInput.value = '';
+        }
+        
+        // 添加新业务员
+        function addNewSalesperson() {
+            const nameInput = document.getElementById('newSalespersonName');
+            const amountInput = document.getElementById('newSalespersonSales');
+            
+            const name = nameInput.value.trim();
+            const amount = parseFloat(amountInput.value) || 0;
+            
+            if (!name) {
+                alert('请输入新业务员姓名');
+                return;
+            }
+            
+            // 检查是否已存在同名业务员
+            if (allSalespersons.includes(name)) {
+                alert(`业务员 "${name}" 已存在！`);
+                return;
+            }
+            
+            // 添加到业务员列表
+            allSalespersons.push(name);
+            
+            // 更新下拉菜单
+            updateSalespersonDropdowns();
+            
+            // 添加到所有月份的数据
+            Object.keys(salesData).forEach(month => {
+                salesData[month].push({ name, sales: 0 });
+            });
+            
+            // 如果当前是月度模式，添加到当前月份
+            if (currentPeriodType === 'month') {
+                const currentMonthData = salesData[currentPeriodValue];
+                const personIndex = currentMonthData.findIndex(p => p.name === name);
+                if (personIndex !== -1) {
+                    currentMonthData[personIndex].sales = amount;
+                }
+            }
+            
+            updateTable();
+            updateTotal();
+            updateTopPerformers();
+            updatePeriodComparison();
+            updateTargetDisplay();
+            
+            // 清空输入框
+            nameInput.value = '';
+            amountInput.value = '';
+            
+            alert(`成功添加新业务员: ${name}`);
+        }
+        
+        // 编辑数据（仅在月度模式下可用）
+        function editSalesData(name) {
+            if (currentPeriodType !== 'month') {
+                alert('只能在月度模式下编辑数据');
+                return;
+            }
+            
+            const currentSales = getSalesForPerson(name, currentPeriodValue);
+            const newAmount = prompt(`请输入 ${name} 的新销售额:`, currentSales);
+            
+            if (newAmount !== null) {
+                const amount = parseFloat(newAmount);
+                
+                if (isNaN(amount) || amount < 0) {
+                    alert('请输入有效的销售额');
+                    return;
+                }
+                
+                const personIndex = salesData[currentPeriodValue].findIndex(p => p.name === name);
+                if (personIndex !== -1) {
+                    salesData[currentPeriodValue][personIndex].sales = amount;
+                    updateTable();
+                    updateTotal();
+                    updateTopPerformers();
+                    updatePeriodComparison();
+                    updateTargetDisplay();
+                }
+            }
+        }
+        
+        // 删除数据（仅在月度模式下可用）
+        function deleteSalesData(name) {
+            if (currentPeriodType !== 'month') {
+                alert('只能在月度模式下删除数据');
+                return;
+            }
+            
+            if (confirm(`确定要删除 ${name} 在${getMonthName(currentPeriodValue)}的数据吗？`)) {
+                const personIndex = salesData[currentPeriodValue].findIndex(p => p.name === name);
+                if (personIndex !== -1) {
+                    salesData[currentPeriodValue].splice(personIndex, 1);
+                    updateTable();
+                    updateTotal();
+                    updateTopPerformers();
+                    updatePeriodComparison();
+                    updateTargetDisplay();
+                }
+            }
+        }
+        
+        // 表格排序
+        function sortTable(columnIndex) {
+            const indicators = document.querySelectorAll('.sort-indicator');
+            indicators.forEach(indicator => indicator.textContent = '▼');
+            
+            if (!sortDirection[columnIndex]) {
+                sortDirection[columnIndex] = 'desc';
+            } else {
+                sortDirection[columnIndex] = sortDirection[columnIndex] === 'asc' ? 'desc' : 'asc';
+            }
+            
+            indicators[columnIndex].textContent = sortDirection[columnIndex] === 'asc' ? '▲' : '▼';
+            
+            const currentData = getCurrentPeriodData();
+            
+            currentData.sort((a, b) => {
+                let comparison = 0;
+                
+                switch(columnIndex) {
+                    case 0: // 排名 - 按销售额排序
+                        comparison = b.sales - a.sales;
+                        break;
+                    case 1: // 姓名 - 按字母排序
+                        comparison = a.name.localeCompare(b.name);
+                        break;
+                    case 2: // 销售额
+                        comparison = a.sales - b.sales;
+                        break;
+                }
+                
+                return sortDirection[columnIndex] === 'asc' ? comparison : -comparison;
+            });
+            
+            updateTable();
+        }
+        
+        // 更新总计
+        function updateTotal() {
+            const currentData = getCurrentPeriodData();
+            const total = currentData.reduce((sum, person) => sum + person.sales, 0);
+            const average = currentData.length > 0 ? total / currentData.length : 0;
+            
+            document.getElementById('totalSales').textContent = formatNumber(total);
+            document.getElementById('salespersonCount').textContent = currentData.length;
+            document.getElementById('averageSales').textContent = formatNumber(average);
+        }
+        
+        // 更新目标显示
+        function updateTargetDisplay() {
+            const currentData = getCurrentPeriodData();
+            const total = currentData.reduce((sum, person) => sum + person.sales, 0);
+            const currentTarget = getCurrentPeriodTarget();
+            
+            // 更新目标值显示
+            document.getElementById('targetValue').textContent = formatNumber(currentTarget);
+            
+            // 计算目标差距
+            const gap = total - currentTarget;
+            const gapElement = document.getElementById('targetGap');
+            
+            if (gap >= 0) {
+                gapElement.className = 'trend-indicator trend-up';
+                gapElement.textContent = `+${formatNumber(gap)}`;
+            } else {
+                gapElement.className = 'trend-indicator trend-down';
+                gapElement.textContent = formatNumber(gap);
+            }
+            
+            // 更新完成度
+            const completionRate = currentTarget > 0 ? (total / currentTarget * 100) : 0;
+            document.getElementById('completionRate').textContent = `${completionRate.toFixed(1)}%`;
+            
+            // 更新进度条
+            document.getElementById('progressFill').style.width = `${Math.min(completionRate, 100)}%`;
+            
+            // 更新年度目标显示
+            document.getElementById('yearlyTargetValue').textContent = formatNumber(targetData.yearly);
+            
+            // 计算年度完成度
+            const yearData = getYearData(currentYear);
+            const yearTotal = yearData.reduce((sum, person) => sum + person.sales, 0);
+            const yearlyCompletionRate = targetData.yearly > 0 ? (yearTotal / targetData.yearly * 100) : 0;
+            document.getElementById('yearlyCompletionRate').textContent = `${yearlyCompletionRate.toFixed(1)}%`;
+        }
+        
+        // 更新目标金额
+        function updateTarget() {
+            const targetInput = document.getElementById('targetAmount');
+            const newTarget = parseFloat(targetInput.value);
+            
+            if (isNaN(newTarget) || newTarget < 0) {
+                alert('请输入有效的目标金额');
+                return;
+            }
+            
+            // 根据当前期间类型更新相应的目标
+            if (currentPeriodType === 'month') {
+                const quarter = getQuarterByMonth(parseInt(currentPeriodValue.split('-')[1]));
+                targetData[`q${quarter}`] = newTarget * 3;
+            } else if (currentPeriodType === 'quarter') {
+                const quarter = parseInt(currentPeriodValue.split('-')[1].substring(1));
+                targetData[`q${quarter}`] = newTarget;
+            } else if (currentPeriodType === 'year') {
+                targetData.yearly = newTarget;
+            }
+            
+            updateTargetInputs();
+            updateTargetDisplay();
+            updateTable(); // 重新计算完成度
+        }
+        
+        // 更新所有目标
+        function updateAllTargets() {
+            const yearlyTarget = parseFloat(document.getElementById('yearlyTarget').value);
+            const q1Target = parseFloat(document.getElementById('q1Target').value);
+            const q2Target = parseFloat(document.getElementById('q2Target').value);
+            const q3Target = parseFloat(document.getElementById('q3Target').value);
+            const q4Target = parseFloat(document.getElementById('q4Target').value);
+            
+            if (isNaN(yearlyTarget) || yearlyTarget < 0 ||
+                isNaN(q1Target) || q1Target < 0 ||
+                isNaN(q2Target) || q2Target < 0 ||
+                isNaN(q3Target) || q3Target < 0 ||
+                isNaN(q4Target) || q4Target < 0) {
+                alert('请输入有效的目标金额');
+                return;
+            }
+            
+            targetData.yearly = yearlyTarget;
+            targetData.q1 = q1Target;
+            targetData.q2 = q2Target;
+            targetData.q3 = q3Target;
+            targetData.q4 = q4Target;
+            
+            updateCurrentPeriodTargetInput();
+            updateTargetDisplay();
+            updateTable(); // 重新计算完成度
+            
+            alert('所有目标已更新！');
+        }
+        
+        // 更新本期最佳表现
+        function updateTopPerformers() {
+            const currentData = getCurrentPeriodData();
+            const sortedData = [...currentData].sort((a, b) => b.sales - a.sales);
+            const topPerformers = sortedData.slice(0, 3);
+            
+            const topPerformersElement = document.getElementById('topPerformers');
+            topPerformersElement.innerHTML = '';
+            
+            topPerformers.forEach((person, index) => {
+                const performerElement = document.createElement('div');
+                performerElement.className = 'top-performer';
+                
+                performerElement.innerHTML = `
+                    <div class="rank">${index + 1}</div>
+                    <div>
+                        <div style="font-weight: bold;">${person.name}</div>
+                        <div style="color: #7f8c8d;">${formatNumber(person.sales)} RMB</div>
+                    </div>
+                `;
+                
+                topPerformersElement.appendChild(performerElement);
+            });
+        }
+        
+        // 更新期间对比
+        function updatePeriodComparison() {
+            const periodComparisonElement = document.getElementById('periodComparison');
+            
+            let comparisonHTML = '';
+            
+            if (currentPeriodType === 'month') {
+                // 显示最近3个月对比
+                const months = Object.keys(salesData).sort().slice(-3);
+                
+                months.forEach(month => {
+                    const monthData = salesData[month];
+                    const total = monthData.reduce((sum, person) => sum + person.sales, 0);
+                    const average = monthData.length > 0 ? total / monthData.length : 0;
+                    
+                    comparisonHTML += `
+                        <div style="margin-bottom: 15px; padding: 10px; background: ${month === currentPeriodValue ? '#e3f2fd' : '#f8f9fa'}; border-radius: 8px;">
+                            <div style="font-weight: bold; color: ${month === currentPeriodValue ? '#3498db' : '#2c3e50'};">${getMonthName(month)}</div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <span>总销售额:</span>
+                                <span style="font-weight: bold;">${formatNumber(total)} RMB</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>平均销售额:</span>
+                                <span>${formatNumber(average)} RMB</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else if (currentPeriodType === 'quarter') {
+                // 显示最近4个季度对比
+                const currentYear = parseInt(currentPeriodValue.split('-')[0]);
+                const currentQuarter = parseInt(currentPeriodValue.split('-')[1].substring(1));
+                
+                for (let i = 3; i >= 0; i--) {
+                    let year = currentYear;
+                    let quarter = currentQuarter - i;
+                    
+                    if (quarter < 1) {
+                        quarter += 4;
+                        year--;
+                    }
+                    
+                    const quarterKey = `${year}-Q${quarter}`;
+                    const quarterData = getQuarterData(year, quarter);
+                    const total = quarterData.reduce((sum, person) => sum + person.sales, 0);
+                    const average = quarterData.length > 0 ? total / quarterData.length : 0;
+                    
+                    comparisonHTML += `
+                        <div style="margin-bottom: 15px; padding: 10px; background: ${quarterKey === currentPeriodValue ? '#e3f2fd' : '#f8f9fa'}; border-radius: 8px;">
+                            <div style="font-weight: bold; color: ${quarterKey === currentPeriodValue ? '#3498db' : '#2c3e50'};">${getQuarterName(year, quarter)}</div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <span>总销售额:</span>
+                                <span style="font-weight: bold;">${formatNumber(total)} RMB</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>平均销售额:</span>
+                                <span>${formatNumber(average)} RMB</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else if (currentPeriodType === 'year') {
+                // 显示最近3年对比
+                const currentYear = parseInt(currentPeriodValue);
+                
+                for (let i = 2; i >= 0; i--) {
+                    const year = currentYear - i;
+                    const yearData = getYearData(year);
+                    const total = yearData.reduce((sum, person) => sum + person.sales, 0);
+                    const average = yearData.length > 0 ? total / yearData.length : 0;
+                    
+                    comparisonHTML += `
+                        <div style="margin-bottom: 15px; padding: 10px; background: ${year === currentYear ? '#e3f2fd' : '#f8f9fa'}; border-radius: 8px;">
+                            <div style="font-weight: bold; color: ${year === currentYear ? '#3498db' : '#2c3e50'};">${year}年</div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                <span>总销售额:</span>
+                                <span style="font-weight: bold;">${formatNumber(total)} RMB</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>平均销售额:</span>
+                                <span>${formatNumber(average)} RMB</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            periodComparisonElement.innerHTML = comparisonHTML;
+        }
+        
+        // 获取季度数据
+        function getQuarterData(year, quarter) {
+            const startMonth = (quarter - 1) * 3 + 1;
+            
+            // 获取季度内所有月份
+            const quarterMonths = [
+                formatMonth(year, startMonth),
+                formatMonth(year, startMonth + 1),
+                formatMonth(year, startMonth + 2)
+            ];
+            
+            // 合并季度数据
+            const quarterData = {};
+            
+            allSalespersons.forEach(salesperson => {
+                quarterData[salesperson] = 0;
+            });
+            
+            quarterMonths.forEach(month => {
+                if (salesData[month]) {
+                    salesData[month].forEach(person => {
+                        quarterData[person.name] += person.sales;
+                    });
+                }
+            });
+            
+            // 转换为数组格式
+            return Object.keys(quarterData).map(name => ({
+                name,
+                sales: quarterData[name]
+            }));
+        }
+        
+        // 获取年度数据
+        function getYearData(year) {
+            // 获取年度内所有月份
+            const yearMonths = [];
+            for (let month = 1; month <= 12; month++) {
+                yearMonths.push(formatMonth(year, month));
+            }
+            
+            // 合并年度数据
+            const yearData = {};
+            
+            allSalespersons.forEach(salesperson => {
+                yearData[salesperson] = 0;
+            });
+            
+            yearMonths.forEach(month => {
+                if (salesData[month]) {
+                    salesData[month].forEach(person => {
+                        yearData[person.name] += person.sales;
+                    });
+                }
+            });
+            
+            // 转换为数组格式
+            return Object.keys(yearData).map(name => ({
+                name,
+                sales: yearData[name]
+            }));
+        }
+        
+        // 格式化数字显示
+        function formatNumber(num) {
+            return num.toLocaleString('zh-CN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', initializeData);
+        
+        // 支持按Enter键添加数据
+        document.getElementById('salesAmount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addSalesData();
+            }
+        });
+        
+        document.getElementById('quickSalesAmount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                quickAddSalesData();
+            }
+        });
+        
+        document.getElementById('newSalespersonSales').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addNewSalesperson();
+            }
+        });
+        
+        document.getElementById('targetAmount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateTarget();
+            }
+        });
+    </script>
+</body>
+</html>
