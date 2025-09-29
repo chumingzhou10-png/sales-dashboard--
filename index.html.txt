@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>广州市普惠数码技术有限公司 - 销售业绩排行榜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .company-header {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .company-header h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+        
+        .company-header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .header h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1em;
+        }
+        
+        .controls {
+            background: #f8f9fa;
+            padding: 25px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .period-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .period-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .period-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .period-btn.active {
+            background: #2c3e50;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .current-period {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0 15px;
+        }
+        
+        .target-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+        
+        .target-input-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        
+        .target-input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+            font-size: 0.9em;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: end;
+            flex-grow: 1;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        input, select {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .quick-add-section {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .quick-add-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .quick-add-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .new-salesperson-section {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .new-salesperson-section h3 {
+            color: #e67e22;
+            margin-bottom: 15px;
+        }
+        
+        .new-salesperson-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .chart-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        .sales-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            min-width: 800px;
+        }
+        
+        .sales-table th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1.1em;
+            position: relative;
+        }
+        
+        .sales-table th:hover {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+        
+        .sales-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 1.1em;
+        }
+        
+        .sales-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .sales-table tr:hover {
+            background: #e3f2fd;
+            transition: all 0.2s;
+        }
+        
+        .sales-number {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .rank {
+            font-weight: bold;
+            text-align: center;
+            width: 60px;
+        }
+        
+        .rank-1 { 
+            color: #e74c3c; 
+            background-color: #fff0f0;
+        }
+        .rank-2 { 
+            color: #e67e22; 
+            background-color: #fff8f0;
+        }
+        .rank-3 { 
+            color: #f1c40f; 
+            background-color: #fffdf0;
+        }
+        
+        .sort-indicator {
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+        
+        .summary-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .total-card {
+            flex: 1;
+            min-width: 300px;
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .total-card h3 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        
+        .target-card {
+            flex: 1;
+            min-width: 300px;
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .target-card h3 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .trend-indicator {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        
+        .trend-up {
+            color: #e74c3c;
+        }
+        
+        .trend-down {
+            color: #27ae60;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2c3e50);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .target-management {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .target-management h3 {
+            color: #e67e22;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .target-inputs {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .target-input-group-large {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+        
+        .target-input-group-large label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+            text-align: center;
+        }
+        
+        .period-comparison {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .period-card {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .period-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 10px;
+        }
+        
+        .top-performer {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .top-performer .rank {
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .period-controls {
+                justify-content: center;
+            }
+            
+            .target-controls {
+                margin-left: 0;
+                justify-content: center;
+            }
+            
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .sales-table th, .sales-table td {
+                padding: 15px 10px;
+            }
+            
+            .target-inputs {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="company-header">
+            <h1>广州市普惠数码技术有限公司</h1>
+            <p>销售业绩管理系统</p>
+        </div>
+        
+        <div class="header">
+            <h2>📊 销售业绩排行榜</h2>
+            <p>多维度业绩分析，精细化目标追踪</p>
+        </div>
+        
+        <div class="controls">
+            <div class="period-controls">
+                <button class="period-btn active" onclick="setPeriod('month')">月度</button>
+                <button class="period-btn" onclick="setPeriod('quarter')">季度</button>
+                <button class="period-btn" onclick="setPeriod('year')">年度</button>
+                <div class="current-period" id="currentPeriod">2025年10月</div>
+                <button class="period-btn" onclick="changePeriod(-1)">← 上一期</button>
+                <button class="period-btn" onclick="changePeriod(1)">下一期 →</button>
+            </div>
+            
+            <div class="target-controls">
+                <div class="target-input-group">
+                    <label for="targetAmount">本期目标 (RMB)</label>
+                    <input type="number" id="targetAmount" placeholder="输入本期目标">
+                </div>
+                <button onclick="updateTarget()">更新目标</button>
+            </div>
+            
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="salesperson">业务员姓名</label>
+                    <select id="salesperson">
+                        <!-- 选项将通过JavaScript动态生成 -->
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="salesAmount">销售额 (RMB)</label>
+                    <input type="number" id="salesAmount" placeholder="输入销售额">
+                </div>
+                <div class="input-group">
+                    <label for="monthSelect">月份</label>
+                    <select id="monthSelect">
+                        <!-- 月份选项将通过JavaScript动态生成 -->
+                    </select>
+                </div>
+                <button onclick="addSalesData()">添加/更新数据</button>
+            </div>
+        </div>
+        
+        <div class="target-management">
+            <h3>🎯 业绩目标管理</h3>
+            <div class="target-inputs">
+                <div class="target-input-group-large">
+                    <label for="yearlyTarget">年度目标 (RMB)</label>
+                    <input type="number" id="yearlyTarget" placeholder="输入年度目标" value="2000000">
+                </div>
+                <div class="target-input-group-large">
+                    <label for="q1Target">第一季度目标 (RMB)</label>
+                    <input type="number" id="q1Target" placeholder="输入第一季度目标" value="500000">
+                </div>
+                <div class="target-input-group-large">
+                    <label for="q2Target">第二季度目标 (RMB)</label>
+                    <input type="number" id="q2Target" placeholder="输入第二季度目标" value="500000">
+                </div>
+                <div class="target-input-group-large">
+                    <label for="q3Target">第三季度目标 (RMB)</label>
+                    <input type="number" id="q3Target" placeholder="输入第三季度目标" value="500000">
+                </div>
+                <div class="target-input-group-large">
+                    <label for="q4Target">第四季度目标 (RMB)</label>
+                    <input type="number" id="q4
